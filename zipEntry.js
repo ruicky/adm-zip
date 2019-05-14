@@ -2,6 +2,7 @@ var Utils = require("./util"),
     Headers = require("./headers"),
     Constants = Utils.Constants,
     Methods = require("./methods");
+    iconv = require("iconv-lite");
 
 module.exports = function (/*Buffer*/input) {
 
@@ -193,10 +194,12 @@ module.exports = function (/*Buffer*/input) {
         get entryName () { return _entryName.toString(); },
         get rawEntryName() { return _entryName; },
         set entryName (val) {
+            var nameTemp = iconv.decode(val, 'GBK');
             _entryName = Utils.toBuffer(val);
             var lastChar = _entryName[_entryName.length - 1];
             _isDirectory = (lastChar === 47) || (lastChar === 92);
             _entryHeader.fileNameLength = _entryName.length;
+            _entryName = nameTemp;
         },
 
         get extra () { return _extra; },
